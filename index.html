@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cart</title>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      "https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js";
+    </script>
+  </head>
+  <body>
+    <form>
+      <label for="expenseamount">Selling Price:</label>
+      <input type="number" name="expenseamount" id="expense" required />
+      <label for="description">Product Name:</label>
+      <input type="text" name="description" id="description" required />
+      <label for="category">Choose a Category:</label>
+      <select name="category" id="category">
+        <option selected value="0">Select Category</option>
+        <option value="1">Food</option>
+        <option value="2">Clothes</option>
+        <option value="3">Rent</option>
+        <option value="4">Movie</option>
+        <option value="5">Education</option>
+        <option value="6">Grocery</option>
+        <option value="7">Other</option>
+      </select>
+      <button id="add">Add Products</button>
+    </form>
+
+    <h1>Products</h1>
+    <div>
+      <ul id="expenseList" class="list-group"></ul>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+      InitialLoad();
+      var add = document.getElementById("add");
+      add.addEventListener("click", addExpenseItem);
+
+      function InitialLoad() {
+        axios
+          .get(
+            "https://crudcrud.com/api/208f5aea9e0344d39168f451e99e016c/expenses"
+          )
+          .then((res) => {
+            if (res != null) {
+              res.data.forEach((expenseObj) => addtoList(expenseObj));
+            }
+          });
+      }
+
+      function addExpenseItem(e) {
+        e.preventDefault();
+        let amnt = document.getElementById("expense").value;
+        let description = document.getElementById("description").value;
+        let value = document.getElementById("category");
+        let category = value.options[value.selectedIndex].text;
+        if (!amnt || !description || value.selectedIndex < 1) {
+          alert("All fields are mandatory!!");
+          return;
+        }
+        let obj = {
+          Amount: amnt,
+          Description: description,
+          Category: category,
+        };
+        axios
+          .post(
+            "https://crudcrud.com/api/208f5aea9e0344d39168f451e99e016c/expenses",
+            obj
+          )
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
+        addtoList(obj);
+
+        resetInputs();
+      }
+      function resetInputs() {
+        document.getElementById("expense").value = "";
+        document.getElementById("description").value = "";
+        document.getElementById("category").value = 0;
+      }
+      function addtoList(obj) {
+        let expenseList = document.getElementById("expenseList");
+        var li = document.createElement("li");
+        li.id = obj._id;
+        li.appendChild(
+          document.createTextNode(
+            obj.Amount + " " + obj.Description + " " + obj.Category
+          )
+        );
+        var btnSpan = document.createElement("span");
+        var dlt = document.createElement("button");
+        dlt.addEventListener("click", removeItem);
+        dlt.id = "dlt";
+        dlt.appendChild(document.createTextNode("Delete Order"));
+        btnSpan.appendChild(dlt);
+        li.appendChild(btnSpan);
+        expenseList.appendChild(li);
+      }
+
+      function removeItem(e) {
+        e.preventDefault();
+        if (confirm("Should we delete this order?")) {
+          var li = e.target.parentElement.parentElement;
+          var k = li.id;
+          expenseList.removeChild(li);
+        }
+        console.log(k);
+        axios.delete(
+          `https://crudcrud.com/api/208f5aea9e0344d39168f451e99e016c/expenses/${k}`
+        );
+      }
+    </script>
+    <script>
+      "https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js";
+    </script>
+  </body>
+</html>
