@@ -42,7 +42,7 @@
       function InitialLoad() {
         axios
           .get(
-            "https://crudcrud.com/api/208f5aea9e0344d39168f451e99e016c/expenses"
+            "https://crudcrud.com/api/d724ff76c92c48fb973e4d928c7ca88e/expenses"
           )
           .then((res) => {
             if (res != null) {
@@ -68,7 +68,7 @@
         };
         axios
           .post(
-            "https://crudcrud.com/api/208f5aea9e0344d39168f451e99e016c/expenses",
+            "https://crudcrud.com/api/d724ff76c92c48fb973e4d928c7ca88e/expenses",
             obj
           )
           .then((res) => console.log(res))
@@ -110,7 +110,7 @@
         }
         console.log(k);
         axios.delete(
-          `https://crudcrud.com/api/208f5aea9e0344d39168f451e99e016c/expenses/${k}`
+          `https://crudcrud.com/api/d724ff76c92c48fb973e4d928c7ca88e/expenses/${k}`
         );
       }
     </script>
